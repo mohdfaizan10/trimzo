@@ -17,43 +17,41 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final ApiKeyAuthFilter apiKeyAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
 
         http
-                // Disable CSRF — not needed for REST APIs
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // No sessions — using JWT
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
 
-                // URL permissions
                 .authorizeHttpRequests(auth -> auth
-
-                        // Public endpoints — no login required
                         .requestMatchers(
                                 "/api/v1/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        // All GET requests are public
-                        // This allows /{shortCode} redirect to work!
                         .requestMatchers(HttpMethod.GET, "/**")
                         .permitAll()
 
-                        // Everything else needs authentication
                         .anyRequest().authenticated()
                 )
 
-                // Add JWT filter before default auth filter
+                // API Key filter runs first
+                .addFilterBefore(
+                        apiKeyAuthFilter,
+                        UsernamePasswordAuthenticationFilter.class)
+
+                // JWT filter runs after
                 .addFilterBefore(
                         jwtAuthFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                        ApiKeyAuthFilter.class);
 
         return http.build();
     }

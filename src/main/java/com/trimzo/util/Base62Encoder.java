@@ -14,7 +14,7 @@ public class Base62Encoder {
     private static final int BASE = 62;
 
     /**
-     * Numeric ID ko Base62 short code mein convert karo
+     * Numeric ID ko Base62 short code mein convert karenge
      * Example: 1 → "b", 100 → "bM"
      *
      * @param id Database se aaya auto-increment ID
