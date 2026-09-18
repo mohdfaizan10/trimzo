@@ -1,7 +1,9 @@
 package com.trimzo.service;
 
 import com.trimzo.dto.response.*;
+import com.trimzo.entity.Click;
 import com.trimzo.entity.Url;
+import com.trimzo.exception.UrlNotFoundException;
 import com.trimzo.repository.ClickRepository;
 import com.trimzo.repository.UrlRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +26,8 @@ public class AnalyticsService {
                 .getAuthentication().getName();
 
         Url url = urlRepository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException(
-                        "URL not found: " + shortCode));
+                .orElseThrow(() ->
+                        new UrlNotFoundException(shortCode));
 
         if (!url.getUser().getEmail().equals(email)) {
             throw new RuntimeException(
@@ -43,7 +45,7 @@ public class AnalyticsService {
 
         LocalDateTime lastClicked = clickRepository
                 .findTopByUrlIdOrderByClickedAtDesc(url.getId())
-                .map(c -> c.getClickedAt())
+                .map(Click::getClickedAt)
                 .orElse(null);
 
         return new AnalyticsSummaryResponse(

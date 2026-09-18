@@ -17,13 +17,13 @@
 | V5__alter_short_code_nullable.sql | DB fix                          |
 
 ## APIs Tested
-| API                        | Status    | Result    |
-|----------------------------|-----------|-----------|
-| POST /api/v1/urls          | 201       | ✅         |
-| GET /api/v1/urls           | 200       | ✅         |
-| Duplicate URL              | Same code | ✅         |
-| DELETE /api/v1/urls/{code} | 200       | ✅         |
-| Redirect /{shortCode}      | 302       | ✅         |
+| API                        | Status    | Result |
+|----------------------------|-----------|--------|
+| POST /api/v1/urls          | 201       | ✅      | 
+| GET /api/v1/urls           | 200       | ✅      | 
+| Duplicate URL              | Same code | ✅      |
+| DELETE /api/v1/urls/{code} | 200       | ✅      |
+| Redirect /{shortCode}      | 302       | ✅      |
 
 ## DSA Used
 - Base62 Encoding

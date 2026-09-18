@@ -4,6 +4,9 @@ import com.trimzo.dto.request.CreateUrlRequest;
 import com.trimzo.dto.response.UrlResponse;
 import com.trimzo.entity.Url;
 import com.trimzo.entity.User;
+import com.trimzo.exception.UrlExpiredException;
+import com.trimzo.exception.UrlInactiveException;
+import com.trimzo.exception.UrlNotFoundException;
 import com.trimzo.repository.UrlRepository;
 import com.trimzo.repository.UserRepository;
 import com.trimzo.util.Base62Encoder;
@@ -101,21 +104,18 @@ public class UrlService {
     public String getOriginalUrl(String shortCode) {
 
         Url url = urlRepository.findByShortCode(shortCode)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Short URL not found: " + shortCode));
+                .orElseThrow(() -> new UrlNotFoundException(shortCode));
 
         // Expired hai?
         if (url.getExpiresAt() != null &&
                 url.getExpiresAt()
                         .isBefore(java.time.LocalDateTime.now())) {
-            throw new RuntimeException("This link has expired");
+            throw new UrlExpiredException(shortCode);
         }
 
         // Active hai?
         if (!url.getIsActive()) {
-            throw new RuntimeException(
-                    "This link is no longer active");
+            throw new UrlInactiveException(shortCode);
         }
 
         return url.getOriginalUrl();
