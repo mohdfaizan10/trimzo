@@ -1,7 +1,7 @@
 # Sprint 9 — Documentation
 
 **Date:** 26-09-2026
-**Goal:** Project documentation complete karna
+**Goal:** To complete the Project documentation 
 
 ## Files Created
 | File         | Purpose                                      |
